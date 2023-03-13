@@ -1,13 +1,25 @@
 import express from 'express';
 import mongoose, { Error } from 'mongoose';
 import config from 'config';
-import router from "./routes/user.route";
+import userRouter from "./routes/user.route";
+import { Request, Response} from "express";
+import cardRouter from "./routes/card.route";
 
 const PORT = process.env.PORT || config.get('port');
 const app = express();
+// временно
+app.use((req: Request, res: Response, next) => {
+  // @ts-ignore
+  req.user = {
+    _id: '640f64c68d7a967e593d47ba'
+  };
+
+  next();
+});
 
 app.use(express.json());
-app.use('/', router);
+app.use('/users', userRouter);
+app.use('/cards', cardRouter);
 
 const start = async() => {
   try {
