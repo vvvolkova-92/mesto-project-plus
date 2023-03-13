@@ -1,9 +1,20 @@
 import { Request, Response} from "express";
 import User from "../models/user";
+import {validationResult} from "express-validator";
 
 export const createUser = async(req: Request, res: Response) => {
-  const { name, about, avatar } = req.body;
-  const user = new User({name, about, avatar});
-  await user.save();
-  res.status(201).json({message: `Пользователь с именем ${name} успешно создан.`})
+  try {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) return res.status(400).json({
+      errors: errors.array(),
+      message: 'При попытке создать пользователя переданы некорректные данные',
+    });
+    const { name, about, avatar } = req.body;
+    const user = new User({name, about, avatar});
+    await user.save();
+    res.status(201).json({message: `Пользователь с именем ${name} успешно создан.`})
+  }
+  catch (err) {
+    res.status(500).json({message: "Ошибочка вышла, попробуйте снова."})
+  }
 };
