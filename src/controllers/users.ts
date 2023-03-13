@@ -18,3 +18,24 @@ export const createUser = async(req: Request, res: Response) => {
     res.status(500).json({message: "Ошибочка вышла, попробуйте снова."})
   }
 };
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await User.find({});
+    res.status(200).json({users})
+  }
+  catch (err) {
+    res.status(500).json({message: "Ошибочка вышла, попробуйте снова."})
+  }
+};
+
+export const getUserById = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.userId;
+    const user = await User.findById(id);
+    res.status(200).json({user})
+  }
+  catch (err) {
+    res.status(500).json({message: "Ошибочка вышла, попробуйте снова."})
+  }
+};

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { check }from 'express-validator';
 import config from "config";
-import {createUser} from "../controllers/users";
+import {createUser, getAllUsers, getUserById} from "../controllers/users";
 
 const router = Router();
 const usersPath: string = config.get('usersPath');
@@ -14,13 +14,7 @@ router.post(
     check('avatar', 'Некорректная ссылка').isURL(),
   ],
   createUser);
-
-// router.get(usersPath, async (req: Request, res: Response) => {
-//
-// });
-//
-// router.get(idUsersPath, async (req: Request, res: Response) => {
-//
-// });
+router.get(usersPath, getAllUsers);
+router.get(idUsersPath, getUserById);
 
 export default router;
