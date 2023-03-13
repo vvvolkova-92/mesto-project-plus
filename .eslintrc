@@ -1,6 +1,6 @@
     "env": {
         "es2021": true,
-        "node": true
+        "node": true,
     },
     "extends": [
         "airbnb-base"
