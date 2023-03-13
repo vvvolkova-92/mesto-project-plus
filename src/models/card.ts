@@ -17,10 +17,10 @@ const cardSchema = new Schema<ICard>({
     ref: 'user',
     required: true
   },
-  likes: {
+  likes: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
-  },
+  }],
   createdAt: {
     type: Date,
     required: true,
