@@ -1,7 +1,9 @@
 import { Router } from 'express';
-import { check }from 'express-validator';
-import config from "config";
-import {addCard, deleteLike, getCardById, getCards, putLike} from "../controllers/cards";
+import { check } from 'express-validator';
+import config from 'config';
+import {
+  addCard, deleteCard, deleteLike, getCardById, getCards, putLike,
+} from '../controllers/cards';
 
 const cardRouter = Router();
 const cardsPath: string = config.get('cardsPath');
@@ -11,10 +13,11 @@ const cardLikesPath: string = config.get('cardLikesPath');
 cardRouter.post(
   cardsPath,
   [
-    check('name', 'Некорректное название для карточки').isLength({min: 2, max: 30}),
+    check('name', 'Некорректное название для карточки').isLength({ min: 2, max: 30 }),
     check('link', 'Некорректная ссылка').isURL(),
   ],
-  addCard);
+  addCard,
+);
 // все карточки
 cardRouter.get(cardsPath, getCards);
 // карточка по ID
@@ -23,4 +26,6 @@ cardRouter.get(idCardsPath, getCardById);
 cardRouter.put(cardLikesPath, putLike);
 // удалить лайк
 cardRouter.delete(cardLikesPath, deleteLike);
+// удалить карточку
+cardRouter.delete(idCardsPath, deleteCard);
 export default cardRouter;
