@@ -12,7 +12,7 @@ export const addCard = async (req: Request, res: Response) => {
         message: 'При попытке добавить карточку переданы некорректные данные',
       });
     }
-    const { name, link, createdAt = Date.now()} = req.body;
+    const { name, link, createdAt = Date.now() } = req.body;
     // @ts-ignore
     const owner = req.user._id;
     const card = new Card({
@@ -25,7 +25,6 @@ export const addCard = async (req: Request, res: Response) => {
     res.status(201).json({ message: `Карточка с названием ${name} успешно создана.` });
   } catch (err) {
     const errName = (err as Error).name;
-    console.log(err);
     if (errName === 'ValidationError') {
       res.status(400).send({ message: 'Некорректные данные' });
     }
