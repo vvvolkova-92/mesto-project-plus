@@ -59,8 +59,25 @@ export const putLike = async(req: Request, res: Response) => {
       {new: true},
       );
     if(!card) return res.status(404).json({message: "Карточки с таким ID не существует"});
-    // await card.save();
     res.status(201).json({message: "Лайк поставлен."})
+  }
+  catch (err) {
+    res.status(500).json({message: "Ошибочка вышла, попробуйте снова."});
+  }
+};
+
+export const deleteLike = async(req: Request, res: Response) => {
+  try {
+    // @ts-ignore
+    const userId = req.user._id;
+    const cardId = req.params.cardId;
+    const card = await Card.findByIdAndUpdate(
+      cardId,
+      {$pull: { likes: userId }},
+      {new: true},
+    );
+    if(!card) return res.status(404).json({message: "Карточки с таким ID не существует"});
+    res.status(201).json({message: "Лайк удален."})
   }
   catch (err) {
     res.status(500).json({message: "Ошибочка вышла, попробуйте снова."});

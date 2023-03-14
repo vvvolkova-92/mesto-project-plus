@@ -1,14 +1,13 @@
 import { Router } from 'express';
 import { check }from 'express-validator';
 import config from "config";
-import {addCard, getCardById, getCards} from "../controllers/cards";
-import {putLike} from "../controllers/cards";
+import {addCard, deleteLike, getCardById, getCards, putLike} from "../controllers/cards";
 
 const cardRouter = Router();
 const cardsPath: string = config.get('cardsPath');
 const idCardsPath: string = config.get('idCardsPath');
 const cardLikesPath: string = config.get('cardLikesPath');
-//
+// добавить новую карточку
 cardRouter.post(
   cardsPath,
   [
@@ -16,9 +15,12 @@ cardRouter.post(
     check('link', 'Некорректная ссылка').isURL(),
   ],
   addCard);
+// все карточки
 cardRouter.get(cardsPath, getCards);
+// карточка по ID
 cardRouter.get(idCardsPath, getCardById);
 // поставить лайк
 cardRouter.put(cardLikesPath, putLike);
-
+// удалить лайк
+cardRouter.delete(cardLikesPath, deleteLike);
 export default cardRouter;
