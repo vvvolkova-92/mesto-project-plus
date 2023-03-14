@@ -22,25 +22,21 @@ export const addCard = async (req: Request, res: Response) => {
       owner,
     });
     await card.save();
-    res.status(201).json({ message: `Карточка с названием ${name} успешно создана.` });
+    return res.status(201).json({ message: `Карточка с названием ${name} успешно создана.` });
   } catch (err) {
     const errName = (err as Error).name;
-    if (errName === 'ValidationError') {
-      res.status(400).send({ message: 'Некорректные данные' });
-    }
-    res.status(500).json({ message: 'Ошибочка вышла, попробуйте снова.' });
+    if (errName === 'ValidationError') return res.status(400).send({ message: 'Некорректные данные' });
+    return res.status(500).json({ message: 'Ошибочка вышла, попробуйте снова.' });
   }
-  return null;
 };
 
 export const getCards = async (req: Request, res: Response) => {
   try {
     const cards = await Card.find({});
-    res.status(200).json({ cards });
+    return res.status(200).json({ cards });
   } catch (err) {
-    res.status(500).json({ message: 'Ошибочка вышла, попробуйте снова.' });
+    return res.status(500).json({ message: 'Ошибочка вышла, попробуйте снова.' });
   }
-  return null;
 };
 
 export const getCardById = async (req: Request, res: Response) => {
@@ -48,13 +44,12 @@ export const getCardById = async (req: Request, res: Response) => {
     const id = req.params.cardId;
     const card = await Card.findById(id);
     if (!card) return res.status(404).json({ message: 'Карточка не найдена.' });
-    res.status(200).json({ card });
+    return res.status(200).json({ card });
   } catch (err) {
     const errorName = (err as Error).name;
-    if ((errorName === 'CastError') || (errorName === 'ValidationError')) res.status(400).json({ message: 'Переданы некорректные данные' });
-    res.status(500).json({ message: 'Ошибочка вышла, попробуйте снова.' });
+    if ((errorName === 'CastError') || (errorName === 'ValidationError')) return res.status(400).json({ message: 'Переданы некорректные данные' });
+    return res.status(500).json({ message: 'Ошибочка вышла, попробуйте снова.' });
   }
-  return null;
 };
 
 export const putLike = async (req: Request, res: Response) => {
@@ -68,13 +63,12 @@ export const putLike = async (req: Request, res: Response) => {
       { new: true },
     );
     if (!card) return res.status(404).json({ message: 'Карточки с таким ID не существует' });
-    res.status(201).json({ message: 'Лайк поставлен.' });
+    return res.status(201).json({ message: 'Лайк поставлен.' });
   } catch (err) {
     const errorName = (err as Error).name;
-    if ((errorName === 'CastError') || (errorName === 'ValidationError')) res.status(400).json({ message: 'Переданы некорректные данные' });
-    res.status(500).json({ message: 'Ошибочка вышла, попробуйте снова.' });
+    if (errorName === 'CastError') return res.status(400).json({ message: 'Переданы некорректные данные' });
+    return res.status(500).json({ message: 'Ошибочка вышла, попробуйте снова.' });
   }
-  return null;
 };
 
 export const deleteLike = async (req: Request, res: Response) => {
@@ -88,13 +82,12 @@ export const deleteLike = async (req: Request, res: Response) => {
       { new: true },
     );
     if (!card) return res.status(404).json({ message: 'Карточки с таким ID не существует' });
-    res.status(201).json({ message: 'Лайк удален.' });
+    return res.status(201).json({ message: 'Лайк удален.' });
   } catch (err) {
     const errorName = (err as Error).name;
-    if ((errorName === 'CastError') || (errorName === 'ValidationError')) res.status(400).json({ message: 'Переданы некорректные данные' });
-    res.status(500).json({ message: 'Ошибочка вышла, попробуйте снова.' });
+    if (errorName === 'CastError') return res.status(400).json({ message: 'Переданы некорректные данные' });
+    return res.status(500).json({ message: 'Ошибочка вышла, попробуйте снова.' });
   }
-  return null;
 };
 
 export const deleteCard = async (req: Request, res: Response) => {
@@ -103,11 +96,10 @@ export const deleteCard = async (req: Request, res: Response) => {
     const { cardId } = req.params;
     const card = await Card.findByIdAndRemove(cardId);
     if (!card) return res.status(404).json({ message: 'Карточки с таким ID не существует' });
-    res.status(201).json({ message: 'Карточка удалена' });
+    return res.status(201).json({ message: 'Карточка удалена' });
   } catch (err) {
     const errorName = (err as Error).name;
-    if ((errorName === 'CastError') || (errorName === 'ValidationError')) res.status(400).json({ message: 'Переданы некорректные данные' });
-    res.status(500).json({ message: 'Ошибочка вышла, попробуйте снова.' });
+    if (errorName === 'CastError') return res.status(400).json({ message: 'Переданы некорректные данные' });
+    return res.status(500).json({ message: 'Ошибочка вышла, попробуйте снова.' });
   }
-  return null;
 };
