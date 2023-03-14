@@ -1,5 +1,5 @@
-import {Schema, model} from "mongoose";
-import {IUser} from "../../types/types";
+import { Schema, model } from 'mongoose';
+import { IUser } from '../../types/types';
 
 const userSchema = new Schema<IUser>({
   name: {
@@ -12,7 +12,8 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: true,
     minlength: 2,
-    maxlength: 200,
+    // в описании задания и чек-листе разные данные =) https://imgur.com/QK7mSmw.png
+    maxlength: 30,
   },
   avatar: {
     type: String,

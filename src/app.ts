@@ -20,6 +20,10 @@ app.use((req: Request, res: Response, next) => {
 app.use(express.json());
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
+app.use((req: Request,res: Response) => {
+  res.status(404).json({ message: 'Страница не найдена' });
+  return;
+});
 
 const start = async() => {
   try {

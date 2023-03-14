@@ -1,5 +1,5 @@
-import {Schema, model} from "mongoose";
-import {ICard} from "../../types/types";
+import { Schema, model } from 'mongoose';
+import { ICard } from '../../types/types';
 
 const cardSchema = new Schema<ICard>({
   name: {
@@ -15,12 +15,13 @@ const cardSchema = new Schema<ICard>({
   owner: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: true
+    required: true,
   },
   likes: [{
     type: Schema.Types.ObjectId,
     ref: 'user',
     unique: true,
+    index: true,
   }],
   createdAt: {
     type: Date,
