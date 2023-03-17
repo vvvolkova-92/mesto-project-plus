@@ -1,8 +1,8 @@
-import express from 'express';
+import * as dotenv from 'dotenv';
+import express, { Request, Response } from 'express';
 import mongoose, { Error } from 'mongoose';
 import config from 'config';
 import userRouter from "./routes/user.route";
-import { Request, Response} from "express";
 import cardRouter from "./routes/card.route";
 import {createUser, login} from "./controllers/users";
 import {check} from "express-validator";
@@ -45,6 +45,7 @@ app.use((req: Request,res: Response) => {
 
 const start = async() => {
   try {
+    dotenv.config();
     await mongoose.connect(config.get('mongoUri'));
     app.listen(PORT, () => {
       console.log(`App listening on port ${PORT}...`)
@@ -56,4 +57,6 @@ const start = async() => {
   }
 };
 
+dotenv.config();
 start();
+console.log();

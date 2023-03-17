@@ -4,7 +4,9 @@ import { Error } from 'mongoose';
 import config from "config";
 import bcrypt from 'bcryptjs';
 import User from '../models/user';
-
+import jwt from "jsonwebtoken";
+import * as process from "process";
+const { JWT_SECRET } = process.env;
 
 export const createUser = async (req: Request, res: Response) => {
   try {
@@ -46,7 +48,11 @@ export const login = async(req: Request, res: Response) => {
 
     const isMatchedPassword = await bcrypt.compare(user.password, password);
     if (!isMatchedPassword) return res.status(400).json({message: `Неправильная почта или пароль`});
-
+    const token = jwt.sign(
+      { _id: user._id },
+      JWT_SECRET ? JWT_SECRET : 'test test test',
+      { expiresIn: '7d'
+      });
   }
   catch (err) {
     const errorName = (err as Error).name;
