@@ -13,7 +13,6 @@ export const addCard = async (req: Request, res: Response) => {
       });
     }
     const { name, link, createdAt = Date.now() } = req.body;
-    // @ts-ignore
     const owner = req.user._id;
     const card = new Card({
       name,
@@ -54,7 +53,6 @@ export const getCardById = async (req: Request, res: Response) => {
 
 export const putLike = async (req: Request, res: Response) => {
   try {
-    // @ts-ignore
     const userId = req.user._id;
     const { cardId } = req.params;
     const card = await Card.findByIdAndUpdate(
@@ -73,7 +71,6 @@ export const putLike = async (req: Request, res: Response) => {
 
 export const deleteLike = async (req: Request, res: Response) => {
   try {
-    // @ts-ignore
     const userId = req.user._id;
     const { cardId } = req.params;
     const card = await Card.findByIdAndUpdate(
@@ -92,7 +89,6 @@ export const deleteLike = async (req: Request, res: Response) => {
 
 export const deleteCard = async (req: Request, res: Response) => {
   try {
-    // @ts-ignore
     const { cardId } = req.params;
     const card = await Card.findByIdAndRemove(cardId);
     if (!card) return res.status(404).json({ message: 'Карточки с таким ID не существует' });

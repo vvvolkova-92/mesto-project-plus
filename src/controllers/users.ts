@@ -6,6 +6,9 @@ import bcrypt from 'bcryptjs';
 import User from '../models/user';
 import jwt from "jsonwebtoken";
 import * as process from "process";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 const { JWT_SECRET } = process.env;
 
 export const createUser = async (req: Request, res: Response) => {
@@ -40,19 +43,19 @@ export const login = async(req: Request, res: Response) => {
         message: 'При попытке входа переданы некорректные данные',
       });
     }
-
     const {email, password} = req.body;
-
     const user = await User.findOne({email});
     if (!user) return res.status(400).json({message: `Неправильная почта или пароль`})
 
-    const isMatchedPassword = await bcrypt.compare(user.password, password);
+    const isMatchedPassword = await bcrypt.compare(password, user.password);
     if (!isMatchedPassword) return res.status(400).json({message: `Неправильная почта или пароль`});
+    console.log(JWT_SECRET);
     const token = jwt.sign(
       { _id: user._id },
-      JWT_SECRET ? JWT_SECRET : 'test test test',
-      { expiresIn: '7d'
-      });
+      JWT_SECRET!,
+      { expiresIn: '7d'});
+    console.log(token);
+    return res.json({token, _id: user._id})
   }
   catch (err) {
     const errorName = (err as Error).name;
@@ -92,7 +95,6 @@ export const updateUserInfo = async (req: Request, res: Response) => {
         message: 'При попытке обновить пользователя переданы некорректные данные',
       });
     }
-    // @ts-ignore
     const id = req.user._id;
     const { name, about } = req.body;
     const user = await User.findByIdAndUpdate(id, { name, about });
@@ -115,7 +117,6 @@ export const updateUserAvatar = async (req: Request, res: Response) => {
         message: 'При попытке обновить аватар пользователя введена некорректная ссылка',
       });
     }
-    // @ts-ignore
     const id = req.user._id;
     const { avatar } = req.body;
     const user = await User.findByIdAndUpdate(id, { avatar });
