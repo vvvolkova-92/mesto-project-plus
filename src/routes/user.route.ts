@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { check } from 'express-validator';
 import config from 'config';
 import {
-  getUsers, getUserById, updateUserInfo, updateUserAvatar,
+  getUsers, getUserById, updateUserInfo, updateUserAvatar, getUserInfo,
 } from '../controllers/users';
 
 const userRouter = Router();
@@ -14,6 +14,8 @@ const patchUserAvatarPath: string = config.get('patchUserAvatarPath');
 userRouter.get(usersPath, getUsers);
 // получить пользователя по ID
 userRouter.get(idUsersPath, getUserById);
+// получить инфо о текущем пользователе
+userRouter.get(patchUserPath, getUserInfo);
 // обновить данные пользователя
 userRouter.patch(
   patchUserPath,

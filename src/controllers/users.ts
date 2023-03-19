@@ -44,17 +44,19 @@ export const login = async(req: Request, res: Response) => {
       });
     }
     const {email, password} = req.body;
-    const user = await User.findOne({email});
+    const user = await User.findOne({email}).select('+password');
     if (!user) return res.status(400).json({message: `Неправильная почта или пароль`})
 
     const isMatchedPassword = await bcrypt.compare(password, user.password);
     if (!isMatchedPassword) return res.status(400).json({message: `Неправильная почта или пароль`});
-    console.log(JWT_SECRET);
     const token = jwt.sign(
       { _id: user._id },
       JWT_SECRET!,
       { expiresIn: '7d'});
-    console.log(token);
+    res.cookie('jwt', token, {
+        maxAge: 3600000,
+        httpOnly: true
+      }).end();
     return res.json({token, _id: user._id})
   }
   catch (err) {
@@ -85,6 +87,21 @@ export const getUserById = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Ошибочка вышла, попробуйте снова.' });
   }
 };
+
+export const getUserInfo = async (req: Request, res: Response) => {
+  try {
+    const id = req.user._id;
+    console.log(id);
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ message: 'Пользователь не найден.' });
+    return res.json({ user });
+  } catch (err) {
+    const errorName = (err as Error).name;
+    if (errorName === 'CastError') return res.status(400).json({ message: 'Переданы некорректные данные' });
+    return res.status(500).json({ message: 'Ошибочка вышла, попробуйте снова.' });
+  }
+};
+
 
 export const updateUserInfo = async (req: Request, res: Response) => {
   try {

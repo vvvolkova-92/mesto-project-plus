@@ -90,8 +90,10 @@ export const deleteLike = async (req: Request, res: Response) => {
 export const deleteCard = async (req: Request, res: Response) => {
   try {
     const { cardId } = req.params;
+    const userId = req.user._id;
     const card = await Card.findByIdAndRemove(cardId);
     if (!card) return res.status(404).json({ message: 'Карточки с таким ID не существует' });
+    if(card.owner !== userId) return res.status(403).json({ message: 'Вы не можете удалять чужие карточки' });
     return res.status(201).json({ message: 'Карточка удалена' });
   } catch (err) {
     const errorName = (err as Error).name;

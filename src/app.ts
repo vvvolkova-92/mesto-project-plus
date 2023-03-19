@@ -8,6 +8,7 @@ import {createUser, login} from "./controllers/users";
 import {check} from "express-validator";
 import {JwtPayload} from "jsonwebtoken";
 import auth from "./middlewares/auth";
+import cookieParser from "cookie-parser";
 
 declare global {
   namespace Express {
@@ -20,6 +21,7 @@ declare global {
 const PORT = process.env.PORT || config.get('port');
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 // не требующие авторизации
 app.post(
   '/signin',
@@ -59,4 +61,5 @@ const start = async() => {
     console.log('Ошибка сервера', error)
   }
 };
+
 start();
