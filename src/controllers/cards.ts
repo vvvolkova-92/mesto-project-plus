@@ -1,8 +1,8 @@
-import {NextFunction, Request, Response} from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import Card from '../models/card';
-import NotFoundError from "../errors/404-NotFound";
-import Forbidden from "../errors/403-Forbidden";
+import NotFoundError from '../errors/404-NotFound';
+import Forbidden from '../errors/403-Forbidden';
 
 export const addCard = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -24,7 +24,7 @@ export const addCard = async (req: Request, res: Response, next: NextFunction) =
     await card.save();
     return res.status(201).json({ message: `Карточка с названием ${name} успешно создана.` });
   } catch (err) {
-    next(err)
+    next(err);
   }
 };
 
@@ -86,7 +86,7 @@ export const deleteCard = async (req: Request, res: Response, next: NextFunction
     const userId = req.user._id;
     const card = await Card.findByIdAndRemove(cardId);
     if (!card) throw new NotFoundError('Карточки с таким ID не существует');
-    if(card.owner.toString() !== userId) throw new Forbidden('Пользователь не может удалять чужие карточки')
+    if (card.owner.toString() !== userId) throw new Forbidden('Пользователь не может удалять чужие карточки');
     return res.status(201).json({ message: 'Карточка удалена' });
   } catch (err) {
     next(err);

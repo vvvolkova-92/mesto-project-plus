@@ -1,13 +1,13 @@
-import {NextFunction, Request, Response} from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import config from "config";
+import config from 'config';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import * as process from 'process';
+import * as dotenv from 'dotenv';
 import User from '../models/user';
-import jwt from "jsonwebtoken";
-import * as process from "process";
-import * as dotenv from "dotenv";
-import NotFoundError from "../errors/404-NotFound";
-import BadRequest from "../errors/400-BadRequest";
+import NotFoundError from '../errors/404-NotFound';
+import BadRequest from '../errors/400-BadRequest';
 
 dotenv.config();
 const { JWT_SECRET } = process.env;
@@ -21,11 +21,15 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
         message: 'При попытке создать пользователя переданы некорректные данные',
       });
     }
-    const { name = config.get('defaultName'), about = config.get('defaultAbout'), avatar = config.get('defaultAvatar'), email, password } = req.body;
-    const isRegistered = await User.findOne({email});
-    if(isRegistered) throw new BadRequest('Пользователь уже зарегистрирован');
-    const hashedPassword = await bcrypt.hash(password,10);
-    const user = new User({ email, password: hashedPassword, name, about, avatar });
+    const {
+      name = config.get('defaultName'), about = config.get('defaultAbout'), avatar = config.get('defaultAvatar'), email, password,
+    } = req.body;
+    const isRegistered = await User.findOne({ email });
+    if (isRegistered) throw new BadRequest('Пользователь уже зарегистрирован');
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({
+      email, password: hashedPassword, name, about, avatar,
+    });
     await user.save();
     return res.status(201).json({ message: `Пользователь с именем ${name} успешно создан.` });
   } catch (err) {
@@ -33,7 +37,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export const login = async(req: Request, res: Response, next: NextFunction) => {
+export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -42,8 +46,8 @@ export const login = async(req: Request, res: Response, next: NextFunction) => {
         message: 'При попытке входа переданы некорректные данные',
       });
     }
-    const {email, password} = req.body;
-    const user = await User.findOne({email}).select('+password');
+    const { email, password } = req.body;
+    const user = await User.findOne({ email }).select('+password');
     if (!user) throw new BadRequest('Неправильная почта или пароль');
 
     const isMatchedPassword = await bcrypt.compare(password, user.password);
@@ -51,17 +55,17 @@ export const login = async(req: Request, res: Response, next: NextFunction) => {
     const token = jwt.sign(
       { _id: user._id },
       JWT_SECRET!,
-      { expiresIn: '7d'});
+      { expiresIn: '7d' },
+    );
     res.cookie('jwt', token, {
-        maxAge: 3600000,
-        httpOnly: true
-      });
-    return res.json({token, _id: user._id})
-  }
-  catch (err) {
+      maxAge: 3600000,
+      httpOnly: true,
+    });
+    return res.json({ token, _id: user._id });
+  } catch (err) {
     next(err);
   }
-}
+};
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -93,7 +97,6 @@ export const getUserInfo = async (req: Request, res: Response, next: NextFunctio
     next(err);
   }
 };
-
 
 export const updateUserInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
