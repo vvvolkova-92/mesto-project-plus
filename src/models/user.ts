@@ -2,22 +2,29 @@ import { Schema, model } from 'mongoose';
 import { IUser } from '../../types/types';
 
 const userSchema = new Schema<IUser>({
-  name: {
+  email: {
     type: String,
     required: true,
+    unique: true,
+    index: true,
+  },
+  password: {
+    type: String,
+    required: true,
+    select: false,
+  },
+  name: {
+    type: String,
     minlength: 2,
     maxlength: 30,
   },
   about: {
     type: String,
-    required: true,
     minlength: 2,
-    // в описании задания и чек-листе разные данные =) https://imgur.com/QK7mSmw.png
     maxlength: 30,
   },
   avatar: {
     type: String,
-    required: true,
   },
 });
 
