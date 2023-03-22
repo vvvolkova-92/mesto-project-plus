@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import express, { Request, Response } from 'express';
+import express, {NextFunction, Request, Response} from 'express';
 import mongoose, {Error} from 'mongoose';
 import config from 'config';
 import userRouter from "./routes/user.route";
@@ -9,7 +9,8 @@ import {check} from "express-validator";
 import {JwtPayload} from "jsonwebtoken";
 import auth from "./middlewares/auth";
 import cookieParser from "cookie-parser";
-
+import errors from "./middlewares/error";
+import { requestLogger, errorLogger } from './middlewares/logger';
 declare global {
   namespace Express {
     interface Request {
@@ -22,6 +23,7 @@ const PORT = process.env.PORT || config.get('port');
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(requestLogger);
 // не требующие авторизации
 app.post(
   '/signin',
@@ -47,6 +49,8 @@ app.use((req: Request,res: Response) => {
   res.status(404).json({ message: 'Страница не найдена' });
   return;
 });
+app.use(errorLogger);
+app.use(errors);
 
 const start = async() => {
   try {

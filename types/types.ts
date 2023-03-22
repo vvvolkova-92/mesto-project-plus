@@ -15,3 +15,7 @@ export interface ICard {
   likes?: Types.ObjectId[];
   createdAt: Date;
 }
+
+export interface IPrError extends Error {
+  statusCode: number;
+}
