@@ -6,12 +6,16 @@ import Unauthorized from '../errors/401-Unauthorized';
 const { JWT_SECRET } = process.env;
 export default (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { authorization } = req.headers;
+    if (!authorization || !authorization.startsWith('Bearer ')) {
+      throw new Unauthorized('Необходима авторизация');
+    }
     const token = req.headers.authorization!.split(' ')[1];
-    if (!token) throw new Unauthorized('Необходима авторизация');
     const isVerifiedToken = jwt.verify(token, JWT_SECRET!);
     if (!isVerifiedToken) throw new Unauthorized('Необходима авторизация');
     req.user._id = isVerifiedToken;
+    return next();
   } catch (err) {
-    next();
+    next(err);
   }
 };
