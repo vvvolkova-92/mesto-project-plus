@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import express, {NextFunction, Request, Response} from 'express';
+import express, {Request, Response} from 'express';
 import mongoose, {Error} from 'mongoose';
 import config from 'config';
 import userRouter from "./routes/user.route";
@@ -16,6 +16,12 @@ declare global {
     interface Request {
       user: { _id: string | JwtPayload }
     }
+  }
+}
+
+declare module 'jsonwebtoken' {
+  export interface UserIDJwtPayload extends JwtPayload {
+    _id: string;
   }
 }
 

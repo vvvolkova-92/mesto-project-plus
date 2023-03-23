@@ -19,3 +19,9 @@ export interface ICard {
 export interface IPrError extends Error {
   statusCode: number;
 }
+
+export interface IToken {
+  _id: string;
+  iat: number;
+  exp: number;
+}
