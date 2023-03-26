@@ -4,7 +4,7 @@ import process from 'process';
 import Unauthorized from '../errors/401-Unauthorized';
 import {IToken} from "../../types/types";
 
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET = 'TEST_KEY' } = process.env;
 export default async(req: Request, res: Response, next: NextFunction) => {
   try {
     const { authorization } = req.headers;
@@ -14,10 +14,10 @@ export default async(req: Request, res: Response, next: NextFunction) => {
     }
     const token = req.headers.authorization!.split(' ')[1];
     const isVerifiedToken = <UserIDJwtPayload>jwt.verify(token, JWT_SECRET!);
-    if (!isVerifiedToken) throw new Unauthorized('Необходима авторизация');
     req.user = isVerifiedToken;
     return next();
   } catch (err) {
+    throw new Unauthorized('Необходима авторизация')
     next(err);
   }
 };

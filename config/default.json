@@ -7,6 +7,6 @@
   "patchUserAvatarPath": "/me/avatar",
   "cardsPath": "/",
   "idCardsPath": "/:cardId",
-  "cardLikesPath": "/:cardId/likes",
+  "cardLikesPath": "/:cardId/likes"
 }
 
