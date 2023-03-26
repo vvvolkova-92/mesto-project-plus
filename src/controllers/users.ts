@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import config from 'config';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import * as process from 'process';
@@ -8,11 +7,11 @@ import * as dotenv from 'dotenv';
 import User from '../models/user';
 import NotFoundError from '../errors/404-NotFound';
 import BadRequest from '../errors/400-BadRequest';
-import Conflict from "../errors/409-Conflict";
-import Unauthorized from "../errors/401-Unauthorized";
+import Conflict from '../errors/409-Conflict';
+import Unauthorized from '../errors/401-Unauthorized';
 
 dotenv.config();
-const { JWT_SECRET = 'TEST_KEY'} = process.env;
+const { JWT_SECRET = 'TEST_KEY' } = process.env;
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -23,7 +22,9 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
         message: 'При попытке создать пользователя переданы некорректные данные',
       });
     }
-    const {name, about, avatar, email, password} = req.body;
+    const {
+      name, about, avatar, email, password,
+    } = req.body;
     const isRegistered = await User.findOne({ email });
     if (isRegistered) throw new Conflict('Пользователь уже зарегистрирован');
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -110,10 +111,10 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
     const id = req.user._id;
     const { name, about } = req.body;
     const user = await User.findByIdAndUpdate(id, { name, about });
-    if (user === null) throw new NotFoundError('Пользователь не найден')
+    if (user === null) throw new NotFoundError('Пользователь не найден');
     else if (!user) throw new BadRequest('Bведены некорректные данные');
     await user.save();
-    return res.send('Пользователь успешно обновлен' );
+    return res.send('Пользователь успешно обновлен');
   } catch (err) {
     next(err);
   }
@@ -131,10 +132,10 @@ export const updateUserAvatar = async (req: Request, res: Response, next: NextFu
     const id = req.user._id;
     const { avatar } = req.body;
     const user = await User.findByIdAndUpdate(id, { avatar });
-    if (user === null) throw new NotFoundError('Пользователь не найден')
+    if (user === null) throw new NotFoundError('Пользователь не найден');
     else if (!user) throw new BadRequest('Bведены некорректные данные');
     await user.save();
-    return res.send('Аватар пользователя успешно обновлен.' );
+    return res.send('Аватар пользователя успешно обновлен.');
   } catch (err) {
     next(err);
   }

@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt, {UserIDJwtPayload} from 'jsonwebtoken';
+import jwt, { UserIDJwtPayload } from 'jsonwebtoken';
 import process from 'process';
 import Unauthorized from '../errors/401-Unauthorized';
-import {IToken} from "../../types/types";
 
 const { JWT_SECRET = 'TEST_KEY' } = process.env;
-export default async(req: Request, res: Response, next: NextFunction) => {
+export default async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { authorization } = req.headers;
 
@@ -18,6 +17,5 @@ export default async(req: Request, res: Response, next: NextFunction) => {
     return next();
   } catch (err) {
     throw new Unauthorized('Необходима авторизация');
-    next(err);
   }
 };
