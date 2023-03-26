@@ -17,7 +17,7 @@ export default async(req: Request, res: Response, next: NextFunction) => {
     req.user = isVerifiedToken;
     return next();
   } catch (err) {
-    throw new Unauthorized('Необходима авторизация')
+    throw new Unauthorized('Необходима авторизация');
     next(err);
   }
 };

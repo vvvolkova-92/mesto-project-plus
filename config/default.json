@@ -9,4 +9,3 @@
   "idCardsPath": "/:cardId",
   "cardLikesPath": "/:cardId/likes"
 }
-

@@ -31,7 +31,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
       email, password: hashedPassword, name, about, avatar,
     });
     await user.save();
-    return res.status(201).json({ message: `Пользователь с именем ${name} успешно создан.` });
+    return res.status(201).json({ message: `Пользователь с почтой ${email} успешно создан.` });
   } catch (err) {
     next(err);
   }

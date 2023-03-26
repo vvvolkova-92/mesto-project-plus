@@ -11,6 +11,7 @@ import auth from "./middlewares/auth";
 import cookieParser from "cookie-parser";
 import errors from "./middlewares/error";
 import { requestLogger, errorLogger } from './middlewares/logger';
+import NotFoundError from "./errors/404-NotFound";
 declare global {
   namespace Express {
     interface Request {
@@ -51,9 +52,8 @@ app.use(auth);
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
-app.use((req: Request,res: Response) => {
-  res.status(404).json({ message: 'Страница не найдена' });
-  return;
+app.use(() => {
+  throw new NotFoundError('Страница не найдена');
 });
 app.use(errorLogger);
 app.use(errors);

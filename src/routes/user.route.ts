@@ -12,10 +12,10 @@ const patchUserPath: string = config.get('patchUserPath');
 const patchUserAvatarPath: string = config.get('patchUserAvatarPath');
 // получить всех пользователей
 userRouter.get(usersPath, getUsers);
-// получить пользователя по ID
-userRouter.get(idUsersPath, getUserById);
 // получить инфо о текущем пользователе
 userRouter.get('/me', getUserInfo);
+// получить пользователя по ID
+userRouter.get(idUsersPath, getUserById);
 // обновить данные пользователя
 userRouter.patch(
   patchUserPath,
