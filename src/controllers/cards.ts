@@ -13,12 +13,11 @@ export const addCard = async (req: Request, res: Response, next: NextFunction) =
         message: 'При попытке добавить карточку переданы некорректные данные',
       });
     }
-    const { name, link, createdAt = Date.now() } = req.body;
+    const { name, link } = req.body;
     const owner = req.user._id;
     const card = new Card({
       name,
       link,
-      createdAt,
       owner,
     });
     await card.save();

@@ -23,10 +23,9 @@ const cardSchema = new Schema<ICard>({
     unique: true,
     index: true,
   }],
-  createdAt: {
-    type: Date,
-    required: true,
-  },
-});
+},
+  {
+    timestamps: { createdAt: true, updatedAt: false }
+  });
 
 export default model<ICard>('Card', cardSchema);
