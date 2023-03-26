@@ -8,9 +8,11 @@ import * as dotenv from 'dotenv';
 import User from '../models/user';
 import NotFoundError from '../errors/404-NotFound';
 import BadRequest from '../errors/400-BadRequest';
+import Conflict from "../errors/409-Conflict";
+import Unauthorized from "../errors/401-Unauthorized";
 
 dotenv.config();
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET = 'TEST_KEY'} = process.env;
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -21,11 +23,9 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
         message: 'При попытке создать пользователя переданы некорректные данные',
       });
     }
-    const {
-      name = config.get('defaultName'), about = config.get('defaultAbout'), avatar = config.get('defaultAvatar'), email, password,
-    } = req.body;
+    const {name, about, avatar, email, password} = req.body;
     const isRegistered = await User.findOne({ email });
-    if (isRegistered) throw new BadRequest('Пользователь уже зарегистрирован');
+    if (isRegistered) throw new Conflict('Пользователь уже зарегистрирован');
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
       email, password: hashedPassword, name, about, avatar,
@@ -48,10 +48,10 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     }
     const { email, password } = req.body;
     const user = await User.findOne({ email }).select('+password');
-    if (!user) throw new BadRequest('Неправильная почта или пароль');
+    if (!user) throw new Unauthorized('Неправильная почта или пароль');
 
     const isMatchedPassword = await bcrypt.compare(password, user.password);
-    if (!isMatchedPassword) throw new BadRequest('Неправильная почта или пароль');
+    if (!isMatchedPassword) throw new Unauthorized('Неправильная почта или пароль');
     const token = jwt.sign(
       { _id: user._id },
       JWT_SECRET!,
@@ -110,9 +110,10 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
     const id = req.user._id;
     const { name, about } = req.body;
     const user = await User.findByIdAndUpdate(id, { name, about });
-    if (!user) throw new BadRequest('Пользователь не найден или введены некорректные данные');
+    if (user === null) throw new NotFoundError('Пользователь не найден')
+    else if (!user) throw new BadRequest('Bведены некорректные данные');
     await user.save();
-    return res.status(201).json({ message: 'Пользователь успешно обновлен.' });
+    return res.send('Пользователь успешно обновлен' );
   } catch (err) {
     next(err);
   }
@@ -130,9 +131,10 @@ export const updateUserAvatar = async (req: Request, res: Response, next: NextFu
     const id = req.user._id;
     const { avatar } = req.body;
     const user = await User.findByIdAndUpdate(id, { avatar });
-    if (!user) throw new BadRequest('Пользователь не найден или введены некорректные данные');
+    if (user === null) throw new NotFoundError('Пользователь не найден')
+    else if (!user) throw new BadRequest('Bведены некорректные данные');
     await user.save();
-    return res.status(201).json({ message: 'Аватар пользователя успешно обновлен.' });
+    return res.send('Аватар пользователя успешно обновлен.' );
   } catch (err) {
     next(err);
   }

@@ -8,8 +8,5 @@
   "cardsPath": "/",
   "idCardsPath": "/:cardId",
   "cardLikesPath": "/:cardId/likes",
-  "defaultName": "Жак-Ив Кусто",
-  "defaultAbout": "Исследователь",
-  "defaultAvatar": "https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png"
 }
 
