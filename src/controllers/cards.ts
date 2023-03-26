@@ -36,17 +36,6 @@ export const getCards = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
-export const getCardById = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const id = req.params.cardId;
-    const card = await Card.findById(id);
-    if (!card) throw new NotFoundError('Карточка не найдена');
-    return res.status(200).json({ card });
-  } catch (err) {
-    next(err);
-  }
-};
-
 export const putLike = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user._id;
@@ -57,7 +46,7 @@ export const putLike = async (req: Request, res: Response, next: NextFunction) =
       { new: true },
     );
     if (!card) throw new NotFoundError('Карточки с таким ID не существует');
-    return res.status(201).json({ message: 'Лайк поставлен.' });
+    return res.send('Лайк поставлен.');
   } catch (err) {
     next(err);
   }
@@ -73,7 +62,7 @@ export const deleteLike = async (req: Request, res: Response, next: NextFunction
       { new: true },
     );
     if (!card) throw new NotFoundError('Карточки с таким ID не существует');
-    return res.status(201).json({ message: 'Лайк удален.' });
+    return res.send('Лайк удален');
   } catch (err) {
     next(err);
   }
@@ -83,10 +72,11 @@ export const deleteCard = async (req: Request, res: Response, next: NextFunction
   try {
     const { cardId } = req.params;
     const userId = req.user._id;
-    const card = await Card.findByIdAndRemove(cardId);
+    const card = await Card.findById(cardId);
     if (!card) throw new NotFoundError('Карточки с таким ID не существует');
     if (card.owner.toString() !== userId) throw new Forbidden('Пользователь не может удалять чужие карточки');
-    return res.status(201).json({ message: 'Карточка удалена' });
+    await card.remove();
+    return res.send('Карточка удалена');
   } catch (err) {
     next(err);
   }

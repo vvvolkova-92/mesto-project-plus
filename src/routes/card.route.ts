@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { check } from 'express-validator';
 import config from 'config';
 import {
-  addCard, deleteCard, deleteLike, getCardById, getCards, putLike,
+  addCard, deleteCard, deleteLike, getCards, putLike,
 } from '../controllers/cards';
 
 const cardRouter = Router();
@@ -20,8 +20,6 @@ cardRouter.post(
 );
 // все карточки
 cardRouter.get(cardsPath, getCards);
-// карточка по ID
-cardRouter.get(idCardsPath, getCardById);
 // поставить лайк
 cardRouter.put(cardLikesPath, putLike);
 // удалить лайк
