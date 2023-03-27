@@ -1,18 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { validationResult } from 'express-validator';
 import Card from '../models/card';
 import NotFoundError from '../errors/404-NotFound';
 import Forbidden from '../errors/403-Forbidden';
 
 export const addCard = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        errors: errors.array(),
-        message: 'При попытке добавить карточку переданы некорректные данные',
-      });
-    }
     const { name, link } = req.body;
     const owner = req.user._id;
     const card = new Card({
@@ -46,7 +38,7 @@ export const putLike = async (req: Request, res: Response, next: NextFunction) =
       { new: true },
     );
     if (!card) throw new NotFoundError('Карточки с таким ID не существует');
-    return res.send('Лайк поставлен.');
+    return res.send({ message: 'Лайк поставлен.' });
   } catch (err) {
     next(err);
   }
@@ -62,7 +54,7 @@ export const deleteLike = async (req: Request, res: Response, next: NextFunction
       { new: true },
     );
     if (!card) throw new NotFoundError('Карточки с таким ID не существует');
-    return res.send('Лайк удален');
+    return res.send({ message: 'Лайк удален' });
   } catch (err) {
     next(err);
   }
@@ -76,7 +68,7 @@ export const deleteCard = async (req: Request, res: Response, next: NextFunction
     if (!card) throw new NotFoundError('Карточки с таким ID не существует');
     if (card.owner.toString() !== userId) throw new Forbidden('Пользователь не может удалять чужие карточки');
     await card.remove();
-    return res.send('Карточка удалена');
+    return res.send({ message: 'Карточка удалена' });
   } catch (err) {
     next(err);
   }

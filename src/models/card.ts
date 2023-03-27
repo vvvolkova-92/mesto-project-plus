@@ -18,15 +18,11 @@ const cardSchema = new Schema<ICard>(
       ref: 'user',
       required: true,
     },
-    // "Сейчас не возможно создать более одной карточки в базе. Поле не должно быть уникальным." -
-    // можно создать сколько-угодно карточек, я проверила. Нельзя поставить больше 1 лайка
-    // своей карточке от себя но от разных пользователей больше 1 лайка поставить можно:
-    // https://imgur.com/jtoxZPi.png
     likes: [{
       type: Schema.Types.ObjectId,
       ref: 'user',
-      unique: true,
-      index: true,
+      // unique: true,
+      // index: true,
     }],
   },
   {

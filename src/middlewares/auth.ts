@@ -4,7 +4,7 @@ import process from 'process';
 import Unauthorized from '../errors/401-Unauthorized';
 
 const { JWT_SECRET = 'TEST_KEY' } = process.env;
-export default async (req: Request, res: Response, next: NextFunction) => {
+export default (req: Request, res: Response, next: NextFunction) => {
   try {
     const { authorization } = req.headers;
 

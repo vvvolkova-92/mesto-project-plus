@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { check } from 'express-validator';
 import config from 'config';
 import {
   addCard, deleteCard, deleteLike, getCards, putLike,
@@ -14,10 +13,6 @@ const cardLikesPath: string = config.get('cardLikesPath');
 // добавить новую карточку
 cardRouter.post(
   cardsPath,
-  [
-    check('name', 'Некорректное название для карточки').isLength({ min: 2, max: 30 }),
-    check('link', 'Некорректная ссылка').isURL(),
-  ],
   validatorAddCard,
   addCard,
 );

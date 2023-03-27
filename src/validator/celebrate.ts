@@ -12,14 +12,14 @@ export const validatorAddCard = celebrate({
 // 1.2 айди карточки
 export const validatorCardId = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().required().length(24).alphanum(),
+    cardId: Joi.string().required().hex().length(24),
   }),
 });
 // 2 - пользователи
 // 2.1 айди пользователя
 export const validatorUserId = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().required().length(24).alphanum(),
+    userId: Joi.string().required().hex().length(24),
   }),
 });
 // 2.2 создание пользователя
@@ -49,6 +49,6 @@ export const validatorUpdateUserInfo = celebrate({
 // 2.5 обновить аватар
 export const validatorUpdateUserAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(urlRegExp),
+    avatar: Joi.string().required().pattern(urlRegExp),
   }),
 });

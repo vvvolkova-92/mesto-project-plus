@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import * as process from 'process';
@@ -15,13 +14,6 @@ const { JWT_SECRET = 'TEST_KEY' } = process.env;
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        errors: errors.array(),
-        message: 'При попытке создать пользователя переданы некорректные данные',
-      });
-    }
     const {
       name, about, avatar, email, password,
     } = req.body;
@@ -40,13 +32,6 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        errors: errors.array(),
-        message: 'При попытке входа переданы некорректные данные',
-      });
-    }
     const { email, password } = req.body;
     const user = await User.findOne({ email }).select('+password');
     if (!user) throw new Unauthorized('Неправильная почта или пароль');
@@ -101,20 +86,13 @@ export const getUserInfo = async (req: Request, res: Response, next: NextFunctio
 
 export const updateUserInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        errors: errors.array(),
-        message: 'При попытке обновить пользователя переданы некорректные данные',
-      });
-    }
     const id = req.user._id;
     const { name, about } = req.body;
     const user = await User.findByIdAndUpdate(id, { name, about });
     if (user === null) throw new NotFoundError('Пользователь не найден');
     else if (!user) throw new BadRequest('Bведены некорректные данные');
     await user.save();
-    return res.send('Пользователь успешно обновлен');
+    return res.send({ message: 'Пользователь успешно обновлен' });
   } catch (err) {
     next(err);
   }
@@ -122,20 +100,13 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
 
 export const updateUserAvatar = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        errors: errors.array(),
-        message: 'При попытке обновить аватар пользователя введена некорректная ссылка',
-      });
-    }
     const id = req.user._id;
     const { avatar } = req.body;
     const user = await User.findByIdAndUpdate(id, { avatar });
     if (user === null) throw new NotFoundError('Пользователь не найден');
     else if (!user) throw new BadRequest('Bведены некорректные данные');
     await user.save();
-    return res.send('Аватар пользователя успешно обновлен.');
+    return res.send({ message: 'Аватар пользователя успешно обновлен.' });
   } catch (err) {
     next(err);
   }

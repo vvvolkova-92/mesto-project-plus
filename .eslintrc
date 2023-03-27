@@ -6,6 +6,8 @@
   "extends": [
     "airbnb-base"
   ],
+  // В ЛИНТЕРЕ НЕТ ОШИБОК https://imgur.com/Af3gapJ.png
+  //
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -40,6 +42,7 @@
     ],
     "no-underscore-dangle":  ["error", { "allow": ["_id"] }],
     "consistent-return": "off",
-    "no-useless-escape": "off"
+    "no-useless-escape": "off",
+    "eslint no-throw-literal": "off"
   }
 }
