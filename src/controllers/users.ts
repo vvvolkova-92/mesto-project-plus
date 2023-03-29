@@ -1,4 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
+import {
+  IRequest, NextFunction, Request, Response,
+} from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import * as process from 'process';
@@ -73,7 +75,7 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export const getUserInfo = async (req: Request, res: Response, next: NextFunction) => {
+export const getUserInfo = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
     const id = req.user._id;
     const user = await User.findById(id);
@@ -84,7 +86,7 @@ export const getUserInfo = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export const updateUserInfo = async (req: Request, res: Response, next: NextFunction) => {
+export const updateUserInfo = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
     const id = req.user._id;
     const { name, about } = req.body;
@@ -98,7 +100,7 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export const updateUserAvatar = async (req: Request, res: Response, next: NextFunction) => {
+export const updateUserAvatar = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
     const id = req.user._id;
     const { avatar } = req.body;

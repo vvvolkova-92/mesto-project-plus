@@ -1,9 +1,11 @@
-import { NextFunction, Request, Response } from 'express';
+import {
+  IRequest, NextFunction, Request, Response,
+} from 'express';
 import Card from '../models/card';
 import NotFoundError from '../errors/404-NotFound';
 import Forbidden from '../errors/403-Forbidden';
 
-export const addCard = async (req: Request, res: Response, next: NextFunction) => {
+export const addCard = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
     const { name, link } = req.body;
     const owner = req.user._id;
@@ -28,7 +30,7 @@ export const getCards = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
-export const putLike = async (req: Request, res: Response, next: NextFunction) => {
+export const putLike = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
     const userId = req.user._id;
     const { cardId } = req.params;
@@ -44,7 +46,7 @@ export const putLike = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
-export const deleteLike = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteLike = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
     const userId = req.user._id;
     const { cardId } = req.params;
@@ -60,7 +62,7 @@ export const deleteLike = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export const deleteCard = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteCard = async (req: IRequest, res: Response, next: NextFunction) => {
   try {
     const { cardId } = req.params;
     const userId = req.user._id;

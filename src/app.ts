@@ -1,31 +1,17 @@
 import * as dotenv from 'dotenv';
 import express from 'express';
-import mongoose, {Error} from 'mongoose';
+import mongoose, { Error } from 'mongoose';
 import config from 'config';
-import userRouter from "./routes/user.route";
-import cardRouter from "./routes/card.route";
-import {createUser, login} from "./controllers/users";
-import {JwtPayload} from "jsonwebtoken";
-import auth from "./middlewares/auth";
-import cookieParser from "cookie-parser";
-import nextErrors from "./middlewares/error";
+import cookieParser from 'cookie-parser';
+import { errors } from 'celebrate';
+import userRouter from './routes/user.route';
+import cardRouter from './routes/card.route';
+import { createUser, login } from './controllers/users';
+import auth from './middlewares/auth';
+import nextErrors from './middlewares/error';
 import { requestLogger, errorLogger } from './middlewares/logger';
-import NotFoundError from "./errors/404-NotFound";
-import {validatorCreateUser, validatorloginUser} from "./validator/celebrate";
-import {errors} from "celebrate";
-declare global {
-  namespace Express {
-    interface Request {
-      user: { _id: string | JwtPayload }
-    }
-  }
-}
-
-declare module 'jsonwebtoken' {
-  export interface UserIDJwtPayload extends JwtPayload {
-    _id: string;
-  }
-}
+import NotFoundError from './errors/404-NotFound';
+import { validatorCreateUser, validatorloginUser } from './validator/celebrate';
 
 const PORT = process.env.PORT || config.get('port');
 const app = express();
@@ -46,17 +32,16 @@ app.use(errorLogger);
 app.use(errors());
 app.use(nextErrors);
 
-const start = async() => {
+const start = async () => {
   try {
     dotenv.config();
     await mongoose.connect(config.get('mongoUri'));
     app.listen(PORT, () => {
-      console.log(`App listening on port ${PORT}...`)
+      console.log(`App listening on port ${PORT}...`);
     });
-  }
-  catch (err) {
-    const error = (err as Error).message
-    console.log('Ошибка сервера', error)
+  } catch (err) {
+    const error = (err as Error).message;
+    console.log('Ошибка сервера', error);
   }
 };
 
