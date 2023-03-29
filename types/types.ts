@@ -1,5 +1,4 @@
 import { Types } from 'mongoose';
-import { Request } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 
 export interface IUser {
@@ -16,20 +15,6 @@ export interface ICard {
   owner: Types.ObjectId;
   likes: Types.ObjectId[];
   createdAt: Date;
-}
-
-// declare global {
-//   namespace Express {
-//     interface Request {
-//       user: { _id: string | JwtPayload }
-//     }
-//   }
-// }
-
-declare module 'express' {
-  export interface IRequest extends Request {
-    user: { _id: string | JwtPayload }
-  }
 }
 
 declare module 'jsonwebtoken' {

@@ -1,6 +1,4 @@
-import {
-  IRequest, NextFunction, Request, Response,
-} from 'express';
+import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import * as process from 'process';
@@ -75,9 +73,9 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export const getUserInfo = async (req: IRequest, res: Response, next: NextFunction) => {
+export const getUserInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const id = req.user._id;
+    const id = (req as any).user._id;
     const user = await User.findById(id);
     if (!user) throw new NotFoundError('Пользователь не найден');
     return res.json({ user });
@@ -86,9 +84,9 @@ export const getUserInfo = async (req: IRequest, res: Response, next: NextFuncti
   }
 };
 
-export const updateUserInfo = async (req: IRequest, res: Response, next: NextFunction) => {
+export const updateUserInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const id = req.user._id;
+    const id = (req as any).user._id;
     const { name, about } = req.body;
     const user = await User.findByIdAndUpdate(id, { name, about });
     if (user === null) throw new NotFoundError('Пользователь не найден');
@@ -100,9 +98,9 @@ export const updateUserInfo = async (req: IRequest, res: Response, next: NextFun
   }
 };
 
-export const updateUserAvatar = async (req: IRequest, res: Response, next: NextFunction) => {
+export const updateUserAvatar = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const id = req.user._id;
+    const id = (req as any).user._id;
     const { avatar } = req.body;
     const user = await User.findByIdAndUpdate(id, { avatar });
     if (user === null) throw new NotFoundError('Пользователь не найден');

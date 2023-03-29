@@ -13,7 +13,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     }
     const token = req.headers.authorization!.split(' ')[1];
     const isVerifiedToken = <UserIDJwtPayload>jwt.verify(token, JWT_SECRET!);
-    req.user = isVerifiedToken;
+    (req as any).user = isVerifiedToken;
     return next();
   } catch (err) {
     throw new Unauthorized('Необходима авторизация');

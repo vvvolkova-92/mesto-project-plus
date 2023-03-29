@@ -1,14 +1,12 @@
-import {
-  IRequest, NextFunction, Request, Response,
-} from 'express';
+import { NextFunction, Request, Response } from 'express';
 import Card from '../models/card';
 import NotFoundError from '../errors/404-NotFound';
 import Forbidden from '../errors/403-Forbidden';
 
-export const addCard = async (req: IRequest, res: Response, next: NextFunction) => {
+export const addCard = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, link } = req.body;
-    const owner = req.user._id;
+    const owner = (req as any).user._id;
     const card = new Card({
       name,
       link,
@@ -30,9 +28,9 @@ export const getCards = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
-export const putLike = async (req: IRequest, res: Response, next: NextFunction) => {
+export const putLike = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user._id;
+    const userId = (req as any).user._id;
     const { cardId } = req.params;
     const card = await Card.findByIdAndUpdate(
       cardId,
@@ -46,9 +44,9 @@ export const putLike = async (req: IRequest, res: Response, next: NextFunction) 
   }
 };
 
-export const deleteLike = async (req: IRequest, res: Response, next: NextFunction) => {
+export const deleteLike = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user._id;
+    const userId = (req as any).user._id;
     const { cardId } = req.params;
     const card = await Card.findByIdAndUpdate(
       cardId,
@@ -62,10 +60,10 @@ export const deleteLike = async (req: IRequest, res: Response, next: NextFunctio
   }
 };
 
-export const deleteCard = async (req: IRequest, res: Response, next: NextFunction) => {
+export const deleteCard = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { cardId } = req.params;
-    const userId = req.user._id;
+    const userId = (req as any).user._id;
     const card = await Card.findById(cardId);
     if (!card) throw new NotFoundError('Карточки с таким ID не существует');
     if (card.owner.toString() !== userId) throw new Forbidden('Пользователь не может удалять чужие карточки');
